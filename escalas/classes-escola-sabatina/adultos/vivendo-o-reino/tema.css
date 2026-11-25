@@ -1,0 +1,26 @@
+/*
+ * Ajustes visuais só da Classe Vivendo o Reino.
+ * As páginas comuns (../../comum/) não mudam.
+ * Os seletores começam com "html body" para valer por cima do estilo comum.
+ */
+
+/* Topo: arte da capa do trimestre no lugar do fundo azul (mesmo tamanho do topo).
+   capa-topo.jpg = capa do trimestre sem a etiqueta "Aluno". Trocar a cada trimestre. */
+html body header {
+  background:
+    linear-gradient(90deg, rgba(15,35,70,.88) 0%, rgba(15,35,70,.62) 45%, rgba(15,35,70,.10) 80%, rgba(15,35,70,0) 100%),
+    url('capa-topo.jpg?v=1') right 30% / cover no-repeat;
+  padding-bottom: 43px; /* compensa a linha "Escala de professores", que saiu */
+}
+html body header .topo, html body header h1 { text-shadow: 0 1px 6px rgba(0,0,0,.45); }
+/* Tira "Escala de professores": a página é para todos os alunos */
+html body header .sub { display: none; }
+
+/* Botão "Responda o Quiz": laranja das nuvens da capa, piscando de leve */
+html body header .quiz { background:#F08A24; color:#2B1405; box-shadow:0 0 8px rgba(240,138,36,.6); animation:quiz-pisca 1.6s ease-in-out infinite; }
+html body header .quiz:hover { background:#F59D45; animation-play-state:paused; }
+@keyframes quiz-pisca {
+  0%, 100% { box-shadow:0 0 6px rgba(240,138,36,.5), 0 0 0 0 rgba(240,138,36,.6); opacity:1; }
+  50%      { box-shadow:0 0 20px rgba(240,138,36,1), 0 0 0 6px rgba(240,138,36,0); opacity:.75; }
+}
+@media (prefers-reduced-motion: reduce) { html body header .quiz { animation:none; } }
