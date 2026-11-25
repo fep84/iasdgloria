@@ -8,22 +8,18 @@ html { background:#F2F4F7; }
 html body::before { background: linear-gradient(rgba(242,244,247,.82), rgba(242,244,247,.90)), var(--capa, url('../capa-trimestre.jpg')) center / cover no-repeat; }
 html body .app { background:rgba(255,255,255,.94); }
 
-/* Topo: arte da capa da lição de jovens do trimestre no fundo (mesmo tamanho do topo).
-   capa-topo.jpg = só a arte da capa, sem o título e sem a etiqueta. Trocar a cada trimestre. */
+/* Topo: arte da capa da lição de jovens do trimestre, com PRO/FE/TAS empilhado e a pena por cima,
+   como na capa (celular e computador). capa-topo-pc.jpg é trocada a cada trimestre. */
 html body header {
   background:
-    linear-gradient(90deg, rgba(40,30,100,.85) 0%, rgba(40,30,100,.55) 45%, rgba(40,30,100,.08) 80%, rgba(40,30,100,0) 100%),
-    url('capa-topo.jpg?v=1') right center / cover no-repeat;
+    linear-gradient(90deg, rgba(40,30,100,.85) 0%, rgba(40,30,100,.55) 30%, rgba(40,30,100,0) 55%),
+    url('capa-topo-pc.jpg?v=1') right center / cover no-repeat;
   padding-bottom: 43px; /* compensa a linha "Escala de professores", que saiu */
 }
-/* Computador: a palavra PRO/FE/TAS empilhada com a pena por cima, como na capa.
-   capa-topo-pc.jpg também é trocada a cada trimestre. */
-@media (min-width: 700px) {
-  html body header {
-    background:
-      linear-gradient(90deg, rgba(40,30,100,.85) 0%, rgba(40,30,100,.55) 30%, rgba(40,30,100,0) 55%),
-      url('capa-topo-pc.jpg?v=1') right center / cover no-repeat;
-  }
+/* Celular: arte um pouco menor e o texto do topo em duas linhas, para não ficar por cima das letras */
+@media (max-width: 560px) {
+  html body header { background-color:#504B9E; background-size: auto, auto 86%; background-position: 0 0, right bottom; }
+  html body header .topo { max-width: 41%; line-height: 1.5; }
 }
 html body header .topo { color:#fff; opacity:.9; }
 html body header .topo, html body header h1 { text-shadow: 0 1px 6px rgba(0,0,0,.45); }
