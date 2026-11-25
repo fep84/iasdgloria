@@ -11,6 +11,7 @@
  *
  * Cada lição já vem ligada ao sábado em que é estudada na classe:
  *   { "trimestre": "2026-04", "titulo": "...", "capa": "...", "link": "...",
+ *     "topo": "licoes/2026-04/topo.jpg", "cor_escura": "#994F0D", "cor_destaque": "#E28C3B",
  *     "licoes": { "03/10/2026": { "numero": "1", "tema": "...", "capa": "...", "link": "..." } } }
  */
 
@@ -24,10 +25,15 @@ if (!preg_match('/^(20\d{2})-0([1-4])$/', $trimestre)) falharAPI(400, 'Trimestre
 $arq = arquivoDoTrimestre($trimestre);
 if (file_exists($arq)) {
     $dados = json_decode(file_get_contents($arq), true);
+    // Trimestre gravado antes do topo automático: marca para sincronizar.php buscar a arte do topo
+    if (is_array($dados) && !array_key_exists('topo', $dados)) {
+        $dados['topo'] = ''; $dados['topo_pendente'] = true;
+        if (!gravarTrimestre($trimestre, $dados)) $dados['topo_pendente'] = false;
+    }
     // Enquanto as imagens estão chegando, o navegador não deve guardar a resposta por muito tempo
-    $falta = !empty($dados['pendentes']) || !empty($dados['capa_pendente']);
+    $falta = !empty($dados['pendentes']) || !empty($dados['capa_pendente']) || !empty($dados['topo_pendente']);
     header('Cache-Control: public, max-age=' . ($falta ? 60 : 3600));
-    echo file_get_contents($arq);
+    echo json_encode($dados, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
 
@@ -43,7 +49,7 @@ if (!$dados) {
 }
 if (!gravarTrimestre($trimestre, $dados)) {
     // Sem permissão de gravar a pasta das lições: funciona, mas só com as imagens oficiais
-    $dados['pendentes'] = []; $dados['capa_pendente'] = false;
+    $dados['pendentes'] = []; $dados['capa_pendente'] = false; $dados['topo_pendente'] = false;
 }
 header('Cache-Control: public, max-age=60');
 echo json_encode($dados, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

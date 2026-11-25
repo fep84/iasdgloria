@@ -65,6 +65,11 @@ function montarDoSite($trimestre) {
         'link'           => 'https://sabbath-school.adventech.io/pt/' . $codigo,
         'automatico'     => true,
         'capa_pendente'  => true,
+        // Topo da página: arte da capa sem texto ("splash") e cores oficiais do trimestre
+        'topo'           => (string)($fonte['quarterly']['splash'] ?? ''),
+        'cor'            => (string)($fonte['quarterly']['color_primary'] ?? ''),
+        'cor_escura'     => (string)($fonte['quarterly']['color_primary_dark'] ?? ''),
+        'topo_pendente'  => true,
         'pendentes'      => $pendentes,
         'licoes'         => $licoes,
     ];
@@ -88,4 +93,29 @@ function salvarJpg($img, $destino, $larg, $alt) {
         $img = $nova;
     }
     return imagejpeg($img, $destino, 82);
+}
+
+/** Dados do topo (arte sem texto e cores oficiais) direto do site, para trimestres montados antes desta função. */
+function topoDoSite($trimestre) {
+    $bruto = baixar('https://sabbath-school.adventech.io/api/v2/pt/quarterlies/' . codigoNoSite($trimestre) . '/index.json');
+    $q = $bruto ? (json_decode($bruto, true)['quarterly'] ?? null) : null;
+    if (!is_array($q) || empty($q['splash'])) return null;
+    return ['topo' => (string)$q['splash'], 'cor' => (string)($q['color_primary'] ?? ''), 'cor_escura' => (string)($q['color_primary_dark'] ?? '')];
+}
+
+/** Cor viva e clara da arte (para o botão do Quiz): o pixel mais saturado e claro de uma miniatura. */
+function corDestaque($img) {
+    $p = imagecreatetruecolor(24, 28);
+    imagecopyresampled($p, $img, 0, 0, 0, 0, 24, 28, imagesx($img), imagesy($img));
+    $melhor = null; $nota = -1;
+    for ($x = 0; $x < 24; $x++) for ($y = 0; $y < 28; $y++) {
+        $c = imagecolorat($p, $x, $y);
+        $r = ($c >> 16) & 255; $g = ($c >> 8) & 255; $b = $c & 255;
+        $max = max($r, $g, $b); $min = min($r, $g, $b);
+        $v = $max / 255; $s = $max ? ($max - $min) / $max : 0;
+        if ($v < .6 || $s < .3) continue;
+        $n = $s * $v * $v;
+        if ($n > $nota) { $nota = $n; $melhor = [$r, $g, $b]; }
+    }
+    return $melhor ? sprintf('#%02X%02X%02X', ...$melhor) : '';
 }

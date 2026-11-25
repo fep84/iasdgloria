@@ -1,8 +1,8 @@
 <?php
 /**
  * api/sincronizar.php
- * Completa um trimestre montado automaticamente: baixa a capa do trimestre e
- * recorta, da revista impressa (PDF), a ilustração de cada lição.
+ * Completa um trimestre montado automaticamente: baixa a capa do trimestre, a arte
+ * do topo da página (capa sem texto) e recorta, da revista impressa (PDF), a ilustração de cada lição.
  * Faz pouco por vez (a capa e até 2 lições por chamada) para não deixar o servidor lento.
  * A página pública chama isto sozinha enquanto faltar alguma imagem.
  *   GET ?tipo=adultos&classe=vivendo-o-reino&trimestre=2027-01
@@ -40,9 +40,24 @@ if (!empty($dados['capa_pendente'])) {
     $dados['capa_pendente'] = false;   // se falhar, fica a capa oficial pelo endereço do site
 }
 
+// 1b) Topo da página: arte da capa sem texto, cor de fundo e cor do botão do Quiz
+$tentativas = $dados['tentativas'] ?? [];
+if (!empty($dados['topo_pendente'])) {
+    if (empty($dados['topo']) && ($t = topoDoSite($trimestre))) $dados = array_merge($dados, $t);
+    $img = !empty($dados['topo']) && ($b = baixar($dados['topo'])) ? @imagecreatefromstring($b) : null;
+    if ($img && salvarJpg($img, $pastaImg . '/topo.jpg', 900, 1050)) {
+        $dados['topo'] = 'licoes/' . $trimestre . '/topo.jpg';
+        $dados['cor_destaque'] = corDestaque($img);
+        $dados['topo_pendente'] = false;
+        $feito[] = 'topo';
+    } else {
+        $tentativas['topo'] = ($tentativas['topo'] ?? 0) + 1;
+        if ($tentativas['topo'] >= 3) { $dados['topo'] = ''; $dados['topo_pendente'] = false; }   // fica o topo padrão
+    }
+}
+
 // 2) Até 2 ilustrações por chamada
 $codigo = codigoNoSite($trimestre);
-$tentativas = $dados['tentativas'] ?? [];
 foreach (array_slice($dados['pendentes'] ?? [], 0, 2) as $id) {
     $data = null;
     foreach ($dados['licoes'] as $d => $l) if (($l['id'] ?? '') === $id) $data = $d;
@@ -67,4 +82,4 @@ $dados['tentativas'] = $tentativas;
 
 gravarTrimestre($trimestre, $dados);
 flock($trava, LOCK_UN);
-responder(200, ['ok' => true, 'feito' => $feito, 'faltam' => count($dados['pendentes'])]);
+responder(200, ['ok' => true, 'feito' => $feito, 'faltam' => count($dados['pendentes'] ?? []) + (empty($dados['topo_pendente']) ? 0 : 1)]);
