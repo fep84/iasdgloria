@@ -1,0 +1,41 @@
+/*
+ * Cores da Classe Hope: topo com a arte da capa da lição de jovens, resto claro com detalhes em azul.
+ * Só esta classe usa este arquivo. As páginas comuns (../../comum/) não mudam.
+ * Os seletores começam com "html" para valer por cima do estilo comum.
+ */
+html:root { --azul:#126BFB; --azul-escuro:#0B4FC2; --azul-claro:#EAF2FF; --dourado:#126BFB; --fundo:#F2F4F7; --texto:#111827; --suave:#6B7280; --borda:#E2E8F0; }
+html { background:#F2F4F7; }
+html body::before { background: linear-gradient(rgba(242,244,247,.82), rgba(242,244,247,.90)), var(--capa, url('../capa-trimestre.jpg')) center / cover no-repeat; }
+html body .app { background:rgba(255,255,255,.94); }
+
+/* Topo: arte da capa da lição de jovens do trimestre no fundo (mesmo tamanho do topo).
+   capa-topo.jpg = só a arte da capa, sem o título e sem a etiqueta. Trocar a cada trimestre. */
+html body header {
+  background:
+    linear-gradient(90deg, rgba(40,30,100,.85) 0%, rgba(40,30,100,.55) 45%, rgba(40,30,100,.08) 80%, rgba(40,30,100,0) 100%),
+    url('capa-topo.jpg?v=1') right center / cover no-repeat;
+  padding-bottom: 43px; /* compensa a linha "Escala de professores", que saiu */
+}
+html body header .topo { color:#fff; opacity:.9; }
+html body header .topo, html body header h1 { text-shadow: 0 1px 6px rgba(0,0,0,.45); }
+/* Tira "Escala de professores": a página é para todos os alunos */
+html body header .sub { display: none; }
+
+/* Botão "Responda o Quiz": verde-água do pé da capa, piscando de leve */
+html body header .quiz { background:#6FE3CF; color:#1E1B4B; box-shadow:0 0 8px rgba(111,227,207,.6); animation:quiz-pisca 1.6s ease-in-out infinite; }
+html body header .quiz:hover { background:#8CEBDB; animation-play-state:paused; }
+@keyframes quiz-pisca {
+  0%, 100% { box-shadow:0 0 6px rgba(111,227,207,.5), 0 0 0 0 rgba(111,227,207,.6); opacity:1; }
+  50%      { box-shadow:0 0 20px rgba(111,227,207,1), 0 0 0 6px rgba(111,227,207,0); opacity:.75; }
+}
+@media (prefers-reduced-motion: reduce) { html body header .quiz { animation:none; } }
+
+html body h2 { border-left:5px solid #126BFB; padding-left:10px; }
+html body .fixos h2 { border-left:0; padding-left:0; }
+html body .card { border-top:4px solid #111; }
+html body .card.atual { background:#EAF2FF; border-color:#126BFB; border-top:4px solid #126BFB; box-shadow:0 4px 18px rgba(18,107,251,.18); }
+html body .card .selo { background:#126BFB; color:#fff; box-shadow:0 0 6px rgba(18,107,251,.5); }
+html body .link { color:#126BFB; }
+html body .link:hover { border-color:#126BFB; }
+html body footer { background:#000; color:#CBD5E1; border:0; }
+html body footer a { color:#7FB2FF; }
