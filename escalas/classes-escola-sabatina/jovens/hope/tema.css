@@ -16,6 +16,15 @@ html body header {
     url('capa-topo.jpg?v=1') right center / cover no-repeat;
   padding-bottom: 43px; /* compensa a linha "Escala de professores", que saiu */
 }
+/* Computador: a palavra PRO/FE/TAS empilhada com a pena por cima, como na capa.
+   capa-topo-pc.jpg também é trocada a cada trimestre. */
+@media (min-width: 700px) {
+  html body header {
+    background:
+      linear-gradient(90deg, rgba(40,30,100,.85) 0%, rgba(40,30,100,.55) 30%, rgba(40,30,100,0) 55%),
+      url('capa-topo-pc.jpg?v=1') right center / cover no-repeat;
+  }
+}
 html body header .topo { color:#fff; opacity:.9; }
 html body header .topo, html body header h1 { text-shadow: 0 1px 6px rgba(0,0,0,.45); }
 /* Tira "Escala de professores": a página é para todos os alunos */
