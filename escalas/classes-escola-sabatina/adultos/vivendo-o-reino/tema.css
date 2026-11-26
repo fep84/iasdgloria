@@ -4,23 +4,28 @@
  * Os seletores começam com "html body" para valer por cima do estilo comum.
  */
 
-/* Topo: arte da capa do trimestre no lugar do fundo azul (mesmo tamanho do topo).
-   capa-topo.jpg = capa do trimestre sem a etiqueta "Aluno". Trocar a cada trimestre. */
-html body header {
+html body header { padding-bottom: 43px; } /* compensa a linha "Escala de professores", que saiu */
+
+/* Topo feito à mão, só no 4º trimestre de 2026: capa-topo.jpg = capa sem a etiqueta "Aluno".
+   Nos outros trimestres o topo vem sozinho (arte da capa sem texto, em comum/publica.html).
+   Para caprichar à mão em outro trimestre, troque a imagem e o "2026-04" abaixo. */
+html[data-tri="2026-04"] body header {
   background:
     linear-gradient(90deg, rgba(15,35,70,.88) 0%, rgba(15,35,70,.62) 45%, rgba(15,35,70,.10) 80%, rgba(15,35,70,0) 100%),
     url('capa-topo.jpg?v=1') right 30% / cover no-repeat;
-  padding-bottom: 43px; /* compensa a linha "Escala de professores", que saiu */
 }
 html body header .topo, html body header h1 { text-shadow: 0 1px 6px rgba(0,0,0,.45); }
 /* Tira "Escala de professores": a página é para todos os alunos */
 html body header .sub { display: none; }
 
-/* Botão "Responda o Quiz": laranja das nuvens da capa, piscando de leve */
-html body header .quiz { background:#F08A24; color:#2B1405; box-shadow:0 0 8px rgba(240,138,36,.6); animation:quiz-pisca 1.6s ease-in-out infinite; }
-html body header .quiz:hover { background:#F59D45; animation-play-state:paused; }
+/* Botão "Responda o Quiz" piscando de leve. A cor vem da capa de cada trimestre (--quiz-rgb);
+   no 4º trimestre de 2026, o laranja das nuvens escolhido à mão. */
+html body header .quiz { animation:quiz-pisca 1.6s ease-in-out infinite; }
+html[data-tri="2026-04"] body header .quiz { --quiz-rgb:240,138,36; background:#F08A24; color:#2B1405; }
+html body header .quiz:hover { animation-play-state:paused; }
+html[data-tri="2026-04"] body header .quiz:hover { background:#F59D45; }
 @keyframes quiz-pisca {
-  0%, 100% { box-shadow:0 0 6px rgba(240,138,36,.5), 0 0 0 0 rgba(240,138,36,.6); opacity:1; }
-  50%      { box-shadow:0 0 20px rgba(240,138,36,1), 0 0 0 6px rgba(240,138,36,0); opacity:.75; }
+  0%, 100% { box-shadow:0 0 6px rgba(var(--quiz-rgb, 240,138,36),.5), 0 0 0 0 rgba(var(--quiz-rgb, 240,138,36),.6); opacity:1; }
+  50%      { box-shadow:0 0 20px rgba(var(--quiz-rgb, 240,138,36),1), 0 0 0 6px rgba(var(--quiz-rgb, 240,138,36),0); opacity:.75; }
 }
 @media (prefers-reduced-motion: reduce) { html body header .quiz { animation:none; } }

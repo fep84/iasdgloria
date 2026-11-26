@@ -8,30 +8,35 @@ html { background:#F2F4F7; }
 html body::before { background: linear-gradient(rgba(242,244,247,.82), rgba(242,244,247,.90)), var(--capa, url('../capa-trimestre.jpg')) center / cover no-repeat; }
 html body .app { background:rgba(255,255,255,.94); }
 
-/* Topo: arte da capa da lição de jovens do trimestre, com PRO/FE/TAS empilhado e a pena por cima,
-   como na capa (celular e computador). capa-topo-pc.jpg é trocada a cada trimestre. */
-html body header {
+html body header { padding-bottom: 43px; } /* compensa a linha "Escala de professores", que saiu */
+
+/* Topo feito à mão, só no 4º trimestre de 2026: arte da capa de jovens com PRO/FE/TAS empilhado e a pena,
+   como na capa (celular e computador). Nos outros trimestres o topo vem sozinho (arte da capa sem texto,
+   em comum/publica.html). Para caprichar à mão em outro trimestre, troque a imagem e o "2026-04" abaixo. */
+html[data-tri="2026-04"] body header {
   background:
     linear-gradient(90deg, rgba(40,30,100,.85) 0%, rgba(40,30,100,.55) 30%, rgba(40,30,100,0) 55%),
     url('capa-topo-pc.jpg?v=1') right center / cover no-repeat;
-  padding-bottom: 43px; /* compensa a linha "Escala de professores", que saiu */
 }
 /* Celular: arte um pouco menor e o texto do topo em duas linhas, para não ficar por cima das letras */
 @media (max-width: 560px) {
-  html body header { background-color:#504B9E; background-size: auto, auto 86%; background-position: 0 0, right bottom; }
-  html body header .topo { max-width: 41%; line-height: 1.5; }
+  html[data-tri="2026-04"] body header { background-color:#504B9E; background-size: auto, auto 86%; background-position: 0 0, right bottom; }
+  html[data-tri="2026-04"] body header .topo { max-width: 41%; line-height: 1.5; }
 }
 html body header .topo { color:#fff; opacity:.9; }
 html body header .topo, html body header h1 { text-shadow: 0 1px 6px rgba(0,0,0,.45); }
 /* Tira "Escala de professores": a página é para todos os alunos */
 html body header .sub { display: none; }
 
-/* Botão "Responda o Quiz": verde-água do pé da capa, piscando de leve */
-html body header .quiz { background:#6FE3CF; color:#1E1B4B; box-shadow:0 0 8px rgba(111,227,207,.6); animation:quiz-pisca 1.6s ease-in-out infinite; }
-html body header .quiz:hover { background:#8CEBDB; animation-play-state:paused; }
+/* Botão "Responda o Quiz" piscando de leve. A cor vem da capa de cada trimestre (--quiz-rgb);
+   no 4º trimestre de 2026, o verde-água do pé da capa escolhido à mão. */
+html body header .quiz { animation:quiz-pisca 1.6s ease-in-out infinite; }
+html[data-tri="2026-04"] body header .quiz { --quiz-rgb:111,227,207; background:#6FE3CF; color:#1E1B4B; }
+html body header .quiz:hover { animation-play-state:paused; }
+html[data-tri="2026-04"] body header .quiz:hover { background:#8CEBDB; }
 @keyframes quiz-pisca {
-  0%, 100% { box-shadow:0 0 6px rgba(111,227,207,.5), 0 0 0 0 rgba(111,227,207,.6); opacity:1; }
-  50%      { box-shadow:0 0 20px rgba(111,227,207,1), 0 0 0 6px rgba(111,227,207,0); opacity:.75; }
+  0%, 100% { box-shadow:0 0 6px rgba(var(--quiz-rgb, 111,227,207),.5), 0 0 0 0 rgba(var(--quiz-rgb, 111,227,207),.6); opacity:1; }
+  50%      { box-shadow:0 0 20px rgba(var(--quiz-rgb, 111,227,207),1), 0 0 0 6px rgba(var(--quiz-rgb, 111,227,207),0); opacity:.75; }
 }
 @media (prefers-reduced-motion: reduce) { html body header .quiz { animation:none; } }
 
